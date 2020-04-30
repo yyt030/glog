@@ -51,6 +51,12 @@ func FlushInterval(v int) Opt {
 	}
 }
 
+func LogMaxSize(v uint64) Opt {
+	return func(t *loggingT) {
+		MaxSize = v
+	}
+}
+
 func SetOpts(opts ...Opt) {
 	for _, opt := range opts {
 		opt(&logging)
