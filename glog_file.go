@@ -20,7 +20,6 @@ package glog
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"os/user"
@@ -38,18 +37,19 @@ var logDirs []string
 
 // If non-empty, overrides the choice of directory in which to write logs.
 // See createLogDirs for the full list of possible destinations.
-var logDir = flag.String("log_dir", "", "If non-empty, write log files in this directory")
+var logDir string
 
 func createLogDirs() {
-	if *logDir != "" {
-		logDirs = append(logDirs, *logDir)
+	if logDir != "" {
+		logDirs = append(logDirs, logDir)
+		os.MkdirAll(logDir, 0755) // ignore error
 	}
 	logDirs = append(logDirs, os.TempDir())
 }
 
 var (
 	pid      = os.Getpid()
-	program  = filepath.Base(os.Args[0])
+	fileName = filepath.Base(os.Args[0])
 	host     = "unknownhost"
 	userName = "unknownuser"
 )
@@ -81,19 +81,13 @@ func shortHostname(hostname string) string {
 // logName returns a new log file name containing tag, with start time t, and
 // the name for the symlink for tag.
 func logName(tag string, t time.Time) (name, link string) {
-	name = fmt.Sprintf("%s.%s.%s.log.%s.%04d%02d%02d-%02d%02d%02d.%d",
-		program,
-		host,
-		userName,
+	name = fmt.Sprintf("%s.%s.%s.%d",
+		fileName,
+		//Mon Jan 2 15:04:05 -0700 MST 2006
+		t.Format("20060102150405"),
 		tag,
-		t.Year(),
-		t.Month(),
-		t.Day(),
-		t.Hour(),
-		t.Minute(),
-		t.Second(),
 		pid)
-	return name, program + "." + tag
+	return name, fileName + "." + tag
 }
 
 var onceLogDirs sync.Once
