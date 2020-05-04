@@ -7,7 +7,7 @@ import (
 
 func main() {
 	glog.SetOpts(
-		glog.LogFile("logs/aaa"),
+		//glog.LogFile("logs/aaa"),
 		glog.AlsoLogToStderr(true),
 		glog.Verbosity(1),
 	)

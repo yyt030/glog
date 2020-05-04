@@ -44,7 +44,8 @@ func createLogDirs() {
 		logDirs = append(logDirs, logDir)
 		os.MkdirAll(logDir, 0755) // ignore error
 	}
-	logDirs = append(logDirs, os.TempDir())
+	//logDirs = append(logDirs, os.TempDir())
+	logDirs = append(logDirs, filepath.Dir(os.Args[0])) // default current path
 }
 
 var (
