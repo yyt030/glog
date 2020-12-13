@@ -67,7 +67,7 @@ func findAndRemove() {
 			if err := os.Remove(filepath.Join(logDir, f.Name())); err != nil {
 				Warnf("log cleaner remove:%f, faild:%v", err)
 			} else {
-				Infof(">>> drop file:%s", f.Name())
+				Infof(">>> drop old file:%s", f.Name())
 			}
 		}
 	}
@@ -75,12 +75,6 @@ func findAndRemove() {
 
 func RunCleaner() {
 	for {
-		Infof("logDir:%s", logDir)
-
-		Infof("flushInterval:%d", flushInterval)
-		Infof("logName:%s", fileName)
-		Infof("cleanInterval:%v, reserve:%v, dir:%s", cleanInterval, cleanReserve, filepath.Dir(os.Args[0]))
-
 		findAndRemove()
 		time.Sleep(cleanInterval)
 	}
