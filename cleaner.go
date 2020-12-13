@@ -65,7 +65,7 @@ func findAndRemove() {
 		// Drop old files
 		if time.Since(f.ModTime()) > cleanReserve {
 			if err := os.Remove(filepath.Join(logDir, f.Name())); err != nil {
-				Warnf("log cleaner remove:%f, faild:%v", err)
+				Warnf("log cleaner remove:%s/%s, faild:%v", logDir, f.Name(), err)
 			} else {
 				Infof(">>> drop old file:%s", f.Name())
 			}

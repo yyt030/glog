@@ -2,10 +2,11 @@ package glog
 
 import (
 	"strings"
+	"testing"
 	"time"
 )
 
-func main() {
+func TestRunCleaner(t *testing.T) {
 	SetOpts(
 		LogMaxSize(1024*10),
 		//glog.LogFile("C:\\workspaces\\glog\\example\\log/test"),
