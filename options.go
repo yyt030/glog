@@ -10,8 +10,8 @@ type Opt func(t *loggingT)
 
 func LogFile(filename string) Opt {
 	return func(t *loggingT) {
-		fileName = filepath.Base(filename)
 		logDir = filepath.Dir(filename)
+		fileName = filepath.Base(filename)
 	}
 }
 
@@ -53,7 +53,19 @@ func FlushInterval(v int) Opt {
 
 func LogMaxSize(v uint64) Opt {
 	return func(t *loggingT) {
-		MaxSize = v
+		maxSize = v
+	}
+}
+
+func CleanReserve(v time.Duration) Opt {
+	return func(t *loggingT) {
+		cleanReserve = v
+	}
+}
+
+func CleanInterval(v time.Duration) Opt {
+	return func(t *loggingT) {
+		cleanInterval = v
 	}
 }
 

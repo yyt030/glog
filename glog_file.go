@@ -29,8 +29,9 @@ import (
 	"time"
 )
 
-// MaxSize is the maximum size of a log file in bytes.
-var MaxSize uint64 = 1024 * 1024 * 1800
+// maxSize is the maximum size of a log file in bytes.
+// default size is 256m
+var maxSize uint64 = 1024 * 1024 * 256
 
 // logDirs lists the candidate directories for new log files.
 var logDirs []string

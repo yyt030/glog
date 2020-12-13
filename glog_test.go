@@ -221,7 +221,7 @@ func TestError(t *testing.T) {
 func TestWarning(t *testing.T) {
 	setFlags()
 	defer logging.swap(logging.newBuffers())
-	Warning("test")
+	Warn("test")
 	if !contains(warningLog, "W", t) {
 		t.Errorf("Warning has wrong character: %q", contents(warningLog))
 	}
@@ -333,8 +333,8 @@ func TestRollover(t *testing.T) {
 	logExitFunc = func(e error) {
 		err = e
 	}
-	defer func(previous uint64) { MaxSize = previous }(MaxSize)
-	MaxSize = 512
+	defer func(previous uint64) { maxSize = previous }(maxSize)
+	maxSize = 512
 
 	Info("x") // Be sure we have a file.
 	info, ok := logging.file[infoLog].(*syncBuffer)
@@ -345,7 +345,7 @@ func TestRollover(t *testing.T) {
 		t.Fatalf("info has initial error: %v", err)
 	}
 	fname0 := info.file.Name()
-	Info(strings.Repeat("x", int(MaxSize))) // force a rollover
+	Info(strings.Repeat("x", int(maxSize))) // force a rollover
 	if err != nil {
 		t.Fatalf("info has error after big write: %v", err)
 	}
@@ -366,7 +366,7 @@ func TestRollover(t *testing.T) {
 	if fname0 == fname1 {
 		t.Errorf("info.f.Name did not change: %v", fname0)
 	}
-	if info.nbytes >= MaxSize {
+	if info.nbytes >= maxSize {
 		t.Errorf("file size was not reset: %d", info.nbytes)
 	}
 }
