@@ -45,27 +45,27 @@ func TraceLocation(v string) Opt {
 	}
 }
 
-func FlushInterval(v int) Opt {
+func FlushIntervalSecond(v uint64) Opt {
 	return func(t *loggingT) {
-		flushInterval = time.Duration(v) * time.Second
+		flushInterval = time.Duration(v) * time.Second // second
 	}
 }
 
-func LogMaxSize(v uint64) Opt {
+func LogMaxSizeMB(v uint64) Opt {
 	return func(t *loggingT) {
-		maxSize = v
+		maxSize = v * 1024 * 1024 // MB
 	}
 }
 
-func CleanReserve(v time.Duration) Opt {
+func CleanReserveDay(v int64) Opt {
 	return func(t *loggingT) {
-		cleanReserve = v
+		cleanReserve = time.Duration(v) * time.Hour * 24 // days
 	}
 }
 
-func CleanInterval(v time.Duration) Opt {
+func CleanIntervalSecond(v uint64) Opt {
 	return func(t *loggingT) {
-		cleanInterval = v
+		cleanInterval = time.Duration(v) * time.Second // second
 	}
 }
 

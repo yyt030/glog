@@ -8,20 +8,18 @@ import (
 
 func TestRunCleaner(t *testing.T) {
 	SetOpts(
-		LogMaxSize(1024*10),
+		LogMaxSizeMB(10),
 		//glog.LogFile("C:\\workspaces\\glog\\example\\log/test"),
-		LogFile("C:\\workspaces\\glog\\example\\log/abc123ok"),
-		FlushInterval(1),
+		LogFile("C:\\workspaces\\glog\\example\\log\\abc123ok"),
+		FlushIntervalSecond(1),
 		//glog.LogToStderr(true),
 		//glog.AlsoLogToStderr(true),
-		CleanInterval(time.Second*5),
-		CleanReserve(time.Second*10),
+		CleanIntervalSecond(5),
+		CleanReserveDay(1),
 	)
 	defer Flush()
 
-	go func() {
-		RunCleaner()
-	}()
+	RunCleaner()
 
 	for i := 0; i < 100; i++ {
 		Infof("%d, %s", i, strings.Repeat("this is test,", 3))
@@ -30,4 +28,5 @@ func TestRunCleaner(t *testing.T) {
 		//time.Sleep(time.Second)
 	}
 
+	time.Sleep(time.Second * 1)
 }

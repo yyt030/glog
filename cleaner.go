@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -58,14 +59,15 @@ func findAndRemove() {
 		}
 
 		// Skip not special filename
-		if len(strings.Split(f.Name(), ".")) < 4 {
+		sn := strings.Split(f.Name(), ".")
+		if len(sn) < 4 || !isNum(sn[len(sn)-1]) {
 			continue
 		}
 
 		// Drop old files
 		if time.Since(f.ModTime()) > cleanReserve {
 			if err := os.Remove(filepath.Join(logDir, f.Name())); err != nil {
-				Warnf("log cleaner remove:%s/%s, faild:%v", logDir, f.Name(), err)
+				Warnf("log cleaner remove:%s/%s, failed:%v", logDir, f.Name(), err)
 			} else {
 				Infof(">>> drop old file:%s", f.Name())
 			}
@@ -73,9 +75,26 @@ func findAndRemove() {
 	}
 }
 
-func RunCleaner() {
-	for {
-		findAndRemove()
-		time.Sleep(cleanInterval)
+func isNum(s string) bool {
+	if _, err := strconv.ParseUint(s, 10, 64); err != nil {
+		return false
 	}
+
+	return true
+}
+
+func RunCleaner() {
+	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				Errorf("glog cleaner run failed:%v", err)
+			}
+		}()
+		Infof("logDir:%s, fileName:%s, cleanInterval:%v, cleanReserve:%v", logDir, fileName, cleanInterval, cleanReserve)
+		for {
+			findAndRemove()
+			time.Sleep(cleanInterval)
+		}
+	}()
+
 }
